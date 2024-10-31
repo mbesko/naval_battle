@@ -1,0 +1,3 @@
+/mnt/c/Users/Максим/Desktop/Naval Battle/build/CMakeFiles/NavalBattle.dir
+/mnt/c/Users/Максим/Desktop/Naval Battle/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/Максим/Desktop/Naval Battle/build/CMakeFiles/rebuild_cache.dir
