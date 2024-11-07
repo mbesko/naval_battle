@@ -1,7 +1,7 @@
 #include "FieldSettingsState.h"
 #include "Game.h"
 #include "MenuState.h"
-#include "GameField.h"
+#include "../../game_field/include/GameField.h"
 #include <conio.h>
 #include "KeyCodes.h"
 #include <windows.h>

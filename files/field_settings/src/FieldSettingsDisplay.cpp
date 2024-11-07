@@ -6,8 +6,14 @@
 void FieldSettingsDisplay::displayScreen(const std::string items[], const int values[], int menuSize, int activeItem) const {
     Console::GoToXY(50, 10);
     std::cout << R"(
-                                                █▀▀ █ █▀▀ █░░ █▀▄   █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
-                                                █▀░ █ ██▄ █▄▄ █▄▀   ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
+
+
+
+
+
+
+                                                     █▀▀ █ █▀▀ █░░ █▀▄   █▀ █▀▀ ▀█▀ ▀█▀ █ █▄░█ █▀▀ █▀
+                                                     █▀░ █ ██▄ █▄▄ █▄▀   ▄█ ██▄ ░█░ ░█░ █ █░▀█ █▄█ ▄█
     )" << std::endl;
 
     for (int i = 0; i < menuSize; i++) {

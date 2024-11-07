@@ -11,6 +11,10 @@ void Player::initShips(int oneDeck, int twoDeck, int threeDeck, int fourDeck) {
     managerShips.addShips(oneDeck, twoDeck, threeDeck, fourDeck);
 }
 
+void Player::cleanField(){
+    field.clean();
+}
+
 // Размещение кораблей игроком
 void Player::placeShips() {
     for (auto& ship : managerShips.getShips()) {
@@ -56,8 +60,6 @@ bool Player::takeTurn(Player& opponent, Player& currentPlayer) {
           currentPlayer.getField().display(nullptr,field.getSize() * 6+5, false, true);
           currentPlayer.managerShips.displayAliveShipsBySize(fieldSize * 6+10, fieldSize*2+5);
           Sleep(1000);
-
-          //return false;
        }
     }
     return true;

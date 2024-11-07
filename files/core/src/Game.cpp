@@ -26,6 +26,15 @@ void Game::run() {
     }
 }
 
+//void Game::runGame(Ship* currentShip, int go, bool enemy, bool open, bool& actionConfirmed) {
+//    while (isRunning) {
+//        Console::clear();
+//        state->display(currentShip,go, enemy, open);
+//        state->handleInput(actionConfirmed, currentShip);
+//    }
+//}
+
+
 void Game::quit() {
     isRunning = false;  // Остановка игрового цикла
 }

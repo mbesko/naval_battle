@@ -13,6 +13,10 @@ ShipPoint::ShipPoint() : state(ShipSegmentState::Intact) {
 //}
 
 // Получить состояние сегмента
+void ShipPoint::setState()  {
+    state = ShipSegmentState::Intact;
+}
+
 ShipSegmentState ShipPoint::getState() const {
     return state;
 }

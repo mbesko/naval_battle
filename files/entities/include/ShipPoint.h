@@ -21,7 +21,7 @@ public:
 
     // Получить состояние сегмента
     ShipSegmentState getState() const;
-
+    void setState() ;
     // Нанести урон сегменту
     void takeDamage();
 

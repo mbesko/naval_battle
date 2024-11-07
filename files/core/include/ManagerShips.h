@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "Ship.h"
-#include "GameField.h"
+#include "../../game_field/include/GameField.h"
 #include "Console.h"
 #include <memory>
 

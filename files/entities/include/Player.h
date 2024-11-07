@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include "ManagerShips.h"
-#include "GameField.h"
+#include "../../game_field/include/GameField.h"
 #include "Console.h"
 #include <string>
 
@@ -16,6 +16,7 @@ private:
 public:
     Player(const std::string& name, int fieldSize, int oneDeck, int twoDeck, int threeDeck, int fourDeck);  // Конструктор, создающий поле нужного размера
     void placeShips();  // Размещение кораблей игроком
+    void cleanField();
     Player(Player&& other) noexcept;
     Player& operator=(Player&& other) noexcept;
 
