@@ -43,6 +43,14 @@ set(SOURCES
         ${FILES_DIR}/game_field/src/GameFieldDisplay.cpp
         ${FILES_DIR}/game_field/src/GameFieldInput.cpp
 
+        # Файлы для способностей
+        ${FILES_DIR}/ability/src/DoubleDamage.cpp
+        ${FILES_DIR}/ability/src/Bombardment.cpp
+        ${FILES_DIR}/ability/src/Scanner.cpp
+        ${FILES_DIR}/ability/src/AbilityManager.cpp
+
+
+
         # Файлы для сущностей
         ${FILES_DIR}/entities/src/Ship.cpp
         ${FILES_DIR}/entities/src/ShipPoint.cpp
@@ -60,6 +68,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${FILES_DIR}/core/include
         ${FILES_DIR}/menu/include
+        ${FILES_DIR}/game_field/include
+        ${FILES_DIR}/ability/include
         ${FILES_DIR}/field_settings/include
         ${FILES_DIR}/entities/include
 )

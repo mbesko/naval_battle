@@ -43,6 +43,7 @@ public:
     std::vector<std::unique_ptr<Ship>>& getShips();
 
     void displayAliveShipsBySize(int x, int y) const;
+    int countAliveShips() const;
 };
 
 #endif // MANAGERSHIPS_H

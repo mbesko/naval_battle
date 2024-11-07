@@ -23,7 +23,7 @@ void Player::placeShips() {
         while (isPlacingShip) {
             Console::clear();
             field.display(ship.get());  // Отображаем поле и область размещения корабля
-            field.handleInput(isPlacingShip, ship.get());  // Обработка перемещения и размещения
+            field.handleInput(isPlacingShip, ship.get(), *this, *this);  // Обработка перемещения и размещения
 
             if (!isPlacingShip) {
                 std::cout << "Корабль успешно размещен!" << std::endl;
@@ -41,6 +41,7 @@ bool Player::takeTurn(Player& opponent, Player& currentPlayer) {
     bool shotMade = false;  // Пока выстрел не сделан
     int fieldSize = field.getSize();
     while (!shotMade) {
+        int countShip = opponent.managerShips.countAliveShips();
         Console::clear();
         Console::GoToXY(0, 0);
         opponent.getField().display(nullptr);  // Отображаем поле противника
@@ -48,19 +49,23 @@ bool Player::takeTurn(Player& opponent, Player& currentPlayer) {
 
         currentPlayer.getField().display(nullptr,field.getSize() * 6+5, false, true);
         currentPlayer.managerShips.displayAliveShipsBySize(fieldSize * 6+10, fieldSize*2+5);
-        opponent.getField().handleInput(shotMade, nullptr);  // Обрабатываем выбор цели и выстрел
+        opponent.getField().handleInput(shotMade, nullptr, *this, opponent);  // Обрабатываем выбор цели и выстрел
 
-
+        if (countShip - opponent.managerShips.countAliveShips() != 0){
+            currentPlayer.abilityManager.addRandomAbility();
+        }
 
       if (shotMade) {
-
           opponent.getField().display(nullptr);  // Отображаем поле противника
           opponent.managerShips.displayAliveShipsBySize(0, fieldSize*2+5);
 
           currentPlayer.getField().display(nullptr,field.getSize() * 6+5, false, true);
           currentPlayer.managerShips.displayAliveShipsBySize(fieldSize * 6+10, fieldSize*2+5);
           Sleep(1000);
-       }
+
+          }
+
+
     }
     return true;
 }
@@ -69,10 +74,20 @@ GameField& Player::getField() {
     return field;
 }
 
+
+
+AbilityManager& Player::getAbilityManager() {
+    return abilityManager;
+}
+
+
 std::string Player::getName() const {
     return name;
 }
 
+ManagerShips& Player::getManagerShips() {
+    return managerShips;
+}
 
 // Конструктор перемещения
 Player::Player(Player&& other) noexcept

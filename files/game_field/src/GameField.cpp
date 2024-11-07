@@ -1,10 +1,14 @@
 // GameField.cpp
+
+#include "Player.h"
 #include "../include/GameField.h"
 #include <iostream>
 #include "../../core/include/Console.h"
 #include "../../core/include/KeyCodes.h"
 #include <conio.h>
 #include <windows.h>
+#include "GameExceptions.h"
+
 
 
 // Реализация чисто виртуального метода display
@@ -28,12 +32,13 @@ void GameField::display(Ship* currentShip, int go, bool enemy, bool open) {
     gameFieldDisplay.displayGameField(currentShip, go, enemy, open, width, height, cursorX, cursorY, grid);
 }
 
-void GameField::handleInput(bool& actionConfirmed, Ship* currentShip) {
+void GameField::handleInput(bool& actionConfirmed, Ship* currentShip, Player& player, Player& opponent) {
     int selectedGameField = input.handleGameFieldInput(cursorX, cursorY, height, width);
-    executeAction(actionConfirmed, selectedGameField, currentShip);
+    executeAction(actionConfirmed, selectedGameField, currentShip, player, opponent);
 }
 
-void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship* currentShip){
+void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship* currentShip, Player& player, Player& opponent){
+    try{
     switch (selectedGameField) {
         case 2:
             break;
@@ -46,13 +51,31 @@ void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship
                 }
             }
             break;
+        case 20:
+            if (ability == nullptr and currentShip == nullptr and player.getAbilityManager().hasAbilities()) {
+                // Получаем способность из AbilityManager
+                ability = player.getAbilityManager().getRandomAbility();
+                if (ability) {
+                    std::cout << "Вы выбрали способность: " << ability->getName() << std::endl;
+                    Sleep(1000);
+                } else {
+                    throw AbilityAcquisitionException();
+                }
+            } else {
+                throw AbilityNotAvailableException();
+            }
+            break;
         case 1:
-            if (currentShip != nullptr) {
+            if (ability){
+                ability->use(opponent.getManagerShips(), *this, cursorX, cursorY);
+                actionConfirmed = true;
+                ability = nullptr;
+            }
+            else if (currentShip != nullptr) {
                 // Попытка разместить корабль на текущей позиции
                 if (!placeShip(*currentShip, cursorX, cursorY)) {
-                    std::cout << "Невозможно разместить корабль. Попробуйте другую позицию." << std::endl;
+                    throw ShipPlacementException();
                     PlaySound(TEXT("sounds/errorplace.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                    Sleep(1000);
                 } else {
                     actionConfirmed = false;  // Корабль успешно размещён
                 }
@@ -64,6 +87,11 @@ void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship
             break;
 
     }
+    }
+    catch (const GameException& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            Sleep(1000);
+        }
 }
 
 
@@ -181,6 +209,10 @@ void GameField::setZeroCursor(){
 
 int GameField::getSize(){
     return width;
+}
+
+Cell& GameField::getCell(int x, int y) {
+    return grid[y][x];  // Возвращаем ячейку из двумерного массива
 }
 
 void GameField::clean(){

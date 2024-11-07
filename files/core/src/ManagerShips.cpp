@@ -83,3 +83,12 @@ void ManagerShips::displayAliveShipsBySize(int x, int y) const {
 }
 
 
+int ManagerShips::countAliveShips() const {
+    int aliveCount = 0;
+    for (const auto& shipPtr : ships) {
+        if (shipPtr && !shipPtr->isSunk()) {
+            aliveCount++;
+        }
+    }
+    return aliveCount;
+}
