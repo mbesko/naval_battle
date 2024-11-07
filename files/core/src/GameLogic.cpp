@@ -11,30 +11,39 @@ GameLogic::GameLogic(Player&& p1, Player&& p2)
 void GameLogic::startGame() {
     // Этап размещения кораблей перед началом игры
 
-    pressEnter(player1.getName(), " размещает свои корабли", 64, 20);
-    player1.placeShips();  // Игрок 1 размещает корабли
-    Sleep(1000);
-    pressEnter(player2.getName(), " размещает свои корабли", 64, 20);
-    player2.placeShips();  // Игрок 2 размещает корабли
-    Sleep(1000);
+    while (true) {
+        pressEnter(player1.getName(), " размещает свои корабли", 64, 20);
+        player1.placeShips();  // Игрок 1 размещает корабли
+        Sleep(1000);
+        pressEnter(player2.getName(), " размещает свои корабли", 64, 20);
+        player2.placeShips();  // Игрок 2 размещает корабли
+        Sleep(1000);
 
-    // Основной игровой цикл
-    while (!isGameOver()) {
-        Player& currentPlayer = getCurrentPlayer();  // Получаем текущего игрока
-        Player& opponent = getOpponent();  // Получаем соперника
+        // Основной игровой цикл
+        while (!isGameOver()) {
+            Player &currentPlayer = getCurrentPlayer();  // Получаем текущего игрока
+            Player &opponent = getOpponent();  // Получаем соперника
 
-        pressEnter(currentPlayer.getName(), " выполняет выстрел", 70, 20);
-        currentPlayer.takeTurn(opponent, currentPlayer);
+            pressEnter(currentPlayer.getName(), " выполняет выстрел", 70, 20);
+            currentPlayer.takeTurn(opponent, currentPlayer);
 
 
-        if (opponent.getField().areAllShipsSunk()) {
-            pressEnter(currentPlayer.getName(), " победил!", 70, 20);
-            break;  // Игра окончена, все корабли соперника потоплены
+            if (opponent.getField().areAllShipsSunk()) {
+                pressEnter(currentPlayer.getName(), " победил!", 70, 20);
+                break;  // Игра окончена, все корабли соперника потоплены
+            }
+            switchTurn();  // Меняем ход на следующего игрока
         }
-        switchTurn();  // Меняем ход на следующего игрока
+        std::string choice;
+        std::cout << "Хотите начать новую игру? (y/n): ";
+        std::cin >> choice;
+        if (choice != "y" && choice != "Y") {
+            break;  // Выход из внешнего цикла, если игрок не хочет играть снова
+        }
+        player1.cleanField();
+        player2.cleanField();
     }
 }
-
 void GameLogic::pressEnter(std::string player, std::string text, int x, int y) {
     Console::clear();
     Console::GoToXY(x,y);

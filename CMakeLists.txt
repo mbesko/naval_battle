@@ -38,11 +38,15 @@ set(SOURCES
         ${FILES_DIR}/field_settings/src/FieldSettingsDisplay.cpp
         ${FILES_DIR}/field_settings/src/FieldSettingsInput.cpp
 
+        # Файлы для поля
+        ${FILES_DIR}/game_field/src/GameField.cpp
+        ${FILES_DIR}/game_field/src/GameFieldDisplay.cpp
+        ${FILES_DIR}/game_field/src/GameFieldInput.cpp
+
         # Файлы для сущностей
         ${FILES_DIR}/entities/src/Ship.cpp
         ${FILES_DIR}/entities/src/ShipPoint.cpp
         ${FILES_DIR}/entities/src/Cell.cpp
-        ${FILES_DIR}/entities/src/GameField.cpp
         ${FILES_DIR}/entities/src/Player.cpp
 
         # Ресурсы

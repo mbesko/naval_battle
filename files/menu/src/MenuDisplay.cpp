@@ -4,7 +4,6 @@
 #include <iostream>
 
 void MenuDisplay::printWelcomeScreen() const {
-    Console::GoToXY(50, 1);
     std::cout << R"(
 
 
@@ -30,6 +29,8 @@ void MenuDisplay::printWelcomeScreen() const {
 }
 
 void MenuDisplay::displayMenu(const std::string items[], int menuSize, int activeMenu) const {
+    printWelcomeScreen();
+    Console::clear();
     printWelcomeScreen();
     for (int i = 0; i < menuSize; i++) {
         if (i == activeMenu)
