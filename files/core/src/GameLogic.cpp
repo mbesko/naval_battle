@@ -3,46 +3,52 @@
 #include <windows.h>
 
 
-// Конструктор логики игры
-GameLogic::GameLogic(Player&& p1, Player&& p2)
-        : player1(std::move(p1)), player2(std::move(p2)), isPlayer1Turn(true) {}
+//// Конструктор логики игры
+//GameLogic::GameLogic(Player&& p1, Player&& p2)
+//        : player1(std::move(p1)), player2(std::move(p2)), isPlayer1Turn(true) {}
+
+GameLogic::GameLogic(int fieldSize, int oneDeck, int twoDeck, int threeDeck, int fourDeck)
+        : player1("Игрок 1",fieldSize, oneDeck, twoDeck, threeDeck,  fourDeck), player2("Игрок 2",fieldSize,  oneDeck, twoDeck, threeDeck,  fourDeck), isPlayer1Turn(true) {}
 
 // Основной цикл игры
 void GameLogic::startGame() {
     // Этап размещения кораблей перед началом игры
-
+    bool isGame = true;
     while (true) {
-        pressEnter(player1.getName(), " размещает свои корабли", 64, 20);
         player1.placeShips();  // Игрок 1 размещает корабли
         Sleep(1000);
-        pressEnter(player2.getName(), " размещает свои корабли", 64, 20);
-        player2.placeShips();  // Игрок 2 размещает корабли
-        Sleep(1000);
-
+        while (isGame){
+            player2.placeShipsRandomly();  // Игрок 2 размещает корабли
+            Sleep(1000);
         // Основной игровой цикл
         while (!isGameOver()) {
-            Player &currentPlayer = getCurrentPlayer();  // Получаем текущего игрока
-            Player &opponent = getOpponent();  // Получаем соперника
+            Player &currentPlayer = player1;  // Получаем текущего игрока
+            Player &opponent = player2;  // Получаем соперника
 
-            pressEnter(currentPlayer.getName(), " выполняет выстрел", 70, 20);
             currentPlayer.takeTurn(opponent, currentPlayer);
-
 
             if (opponent.getField().areAllShipsSunk()) {
                 pressEnter(currentPlayer.getName(), " победил!", 70, 20);
                 break;  // Игра окончена, все корабли соперника потоплены
             }
-            switchTurn();  // Меняем ход на следующего игрока
+            opponent.randomAttack(currentPlayer);
+            if (currentPlayer.getField().areAllShipsSunk()) {
+                isGame = false;
+                pressEnter(opponent.getName(), " победил!", 70, 20);
+                break;  // Игра окончена, все корабли соперника потоплены
+            }
         }
-        std::string choice;
-        std::cout << "Хотите начать новую игру? (y/n): ";
-        std::cin >> choice;
-        if (choice != "y" && choice != "Y") {
-            break;  // Выход из внешнего цикла, если игрок не хочет играть снова
+        if (isGame) {
+            std::string choice;
+            std::cout << "Хотите начать новую игру? (y/n): ";
+            std::cin >> choice;
+            if (choice != "y" && choice != "Y") {
+                isGame = false;
+                break;  // Выход из внешнего цикла, если игрок не хочет играть снова
+            }
+            player2.cleanField();
         }
-        player1.cleanField();
-        player2.cleanField();
-    }
+    }}
 }
 void GameLogic::pressEnter(std::string player, std::string text, int x, int y) {
     Console::clear();

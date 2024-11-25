@@ -1,10 +1,14 @@
 // GameField.cpp
+
+#include "Player.h"
 #include "../include/GameField.h"
 #include <iostream>
 #include "../../core/include/Console.h"
 #include "../../core/include/KeyCodes.h"
 #include <conio.h>
 #include <windows.h>
+#include "GameExceptions.h"
+
 
 
 // Реализация чисто виртуального метода display
@@ -28,12 +32,13 @@ void GameField::display(Ship* currentShip, int go, bool enemy, bool open) {
     gameFieldDisplay.displayGameField(currentShip, go, enemy, open, width, height, cursorX, cursorY, grid);
 }
 
-void GameField::handleInput(bool& actionConfirmed, Ship* currentShip) {
+void GameField::handleInput(bool& actionConfirmed, Ship* currentShip, Player& player, Player& opponent) {
     int selectedGameField = input.handleGameFieldInput(cursorX, cursorY, height, width);
-    executeAction(actionConfirmed, selectedGameField, currentShip);
+    executeAction(actionConfirmed, selectedGameField, currentShip, player, opponent);
 }
 
-void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship* currentShip){
+void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship* currentShip, Player& player, Player& opponent){
+    try{
     switch (selectedGameField) {
         case 2:
             break;
@@ -46,13 +51,31 @@ void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship
                 }
             }
             break;
+        case 20:
+            if (ability == nullptr and currentShip == nullptr and player.getAbilityManager().hasAbilities()) {
+                // Получаем способность из AbilityManager
+                ability = player.getAbilityManager().getRandomAbility();
+                if (ability) {
+                    std::cout << "Вы выбрали способность: " << ability->getName() << std::endl;
+                    Sleep(1000);
+                } else {
+                    throw AbilityAcquisitionException();
+                }
+            } else {
+                throw AbilityNotAvailableException();
+            }
+            break;
         case 1:
-            if (currentShip != nullptr) {
+            if (ability){
+                ability->use(opponent.getManagerShips(), *this, cursorX, cursorY);
+                actionConfirmed = true;
+                ability = nullptr;
+            }
+            else if (currentShip != nullptr) {
                 // Попытка разместить корабль на текущей позиции
                 if (!placeShip(*currentShip, cursorX, cursorY)) {
-                    std::cout << "Невозможно разместить корабль. Попробуйте другую позицию." << std::endl;
+                    throw ShipPlacementException();
                     PlaySound(TEXT("sounds/errorplace.wav"), NULL, SND_FILENAME | SND_ASYNC);
-                    Sleep(1000);
                 } else {
                     actionConfirmed = false;  // Корабль успешно размещён
                 }
@@ -64,6 +87,11 @@ void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship
             break;
 
     }
+    }
+    catch (const GameException& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            Sleep(1000);
+        }
 }
 
 
@@ -130,7 +158,7 @@ void GameField::setStateUnknown(){
     }
 }
 // Выстрел по клетке
-void GameField::attack(int x, int y) {
+void GameField::attack(int x, int y, bool enemy) {
 
     int startX = rand() % (width + 20) + width * 6+10;
     int startY = rand() % ((height+1) - 2 + 1) + 2;
@@ -138,7 +166,9 @@ void GameField::attack(int x, int y) {
     // Анимация движения снаряда от точки старта до точки цели
     PlaySound(TEXT("sounds/attackeee.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
-    gameFieldDisplay.animateShot(startX, startY, (x+1)*6, (y+1)*2);
+    if (!enemy){
+        gameFieldDisplay.animateShot(startX, startY, (x+1)*6, (y+1)*2);}
+    else gameFieldDisplay.animateShot((x+1)*6, (y+1)*2, (x+1)*6+17, (y+1)*2);
     //PlaySound(TEXT("sounds/bomb.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
     // После анимации выполняем выстрел
@@ -147,7 +177,10 @@ void GameField::attack(int x, int y) {
         std::cout << "Попадание!" << std::endl;
         PlaySound(TEXT("sounds/attack.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
-        gameFieldDisplay.animateHit((x+1)*6, (y+1)*2);  // Анимация попадания
+        if (!enemy){
+        gameFieldDisplay.animateHit((x+1)*6, (y+1)*2); }
+        else gameFieldDisplay.animateHit((x+1)*6+17, (y+1)*2);
+
         Console::setTextAttribute(7);
         if(grid[y][x].getState() == CellState::Unknown){
             grid[y][x].setState(CellState::ShipPart);
@@ -183,10 +216,14 @@ int GameField::getSize(){
     return width;
 }
 
+Cell& GameField::getCell(int x, int y) {
+    return grid[y][x];  // Возвращаем ячейку из двумерного массива
+}
+
 void GameField::clean(){
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j){
-            grid[i][j].setShipPart(nullptr);
+            grid[i][j].cleanShipPart();
             grid[i][j].setState(CellState::Empty);
 //            ShipPoint* segment = grid[i][j].getShipPart();
 //            segment->setState();

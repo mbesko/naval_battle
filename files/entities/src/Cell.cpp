@@ -20,7 +20,7 @@ void Cell::setShipPart(ShipPoint* segment) {
     if (segment) {
         state = CellState::ShipPart;  // Если сегмент корабля установлен, меняем состояние
     }
-    if (segment == nullptr) {
+    else if (segment == nullptr) {
         std::cerr << "Error: nullptr segment!" << std::endl;
     }
 
@@ -31,6 +31,10 @@ void Cell::attack() {
         state = CellState::ShipPart;
         shipSegment->takeDamage();
     }
+}
+
+void Cell::cleanShipPart(){
+    shipSegment = nullptr;
 }
 
 ShipPoint* Cell::getShipPart() const {
