@@ -27,6 +27,7 @@ set(SOURCES
         ${FILES_DIR}/core/src/Game.cpp
         ${FILES_DIR}/core/src/GameLogic.cpp
         ${FILES_DIR}/core/src/ManagerShips.cpp
+        ${FILES_DIR}/core/src/GameSave.cpp
 
         # Файлы для меню
         ${FILES_DIR}/menu/src/MenuState.cpp

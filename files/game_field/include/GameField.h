@@ -11,6 +11,8 @@
 #include "GameFieldInput.h"
 #include "Ability.h"
 #include <iomanip>
+#include "GameSave.h"
+
 
 class Player;
 
@@ -25,9 +27,13 @@ private:
 
     GameFieldDisplay gameFieldDisplay;
     GameFieldInput input;
+    GameSave gameSave;
 
 
 public:
+
+    std::string saveToFile(const std::string& filename, bool toSave, const ManagerShips& manager) const;
+    void loadFromFile(const std::string& filename, ManagerShips& manager);
 
     // Конструкторы копирования и перемещения
     GameField(const GameField& other);  // Конструктор копирования

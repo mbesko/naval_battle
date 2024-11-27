@@ -16,7 +16,13 @@ public:
     AbilityManager();  // Конструктор, который инициализирует способности случайным образом
     static AbilityManager& getInstance();  // Метод для получения синглтона
 
-    // Метод для раздачи способности игроку (возвращает способность)
+
+    std::string saveToFile(const std::string& filename, bool toSave);
+    void loadFromFile(const std::string& filename, GameField& gameField, ManagerShips& managerShips);
+
+
+
+        // Метод для раздачи способности игроку (возвращает способность)
     std::unique_ptr<Ability> getRandomAbility();
     void addRandomAbility();
     // Метод для добавления способности обратно в очередь

@@ -8,6 +8,121 @@
 #include <conio.h>
 #include <windows.h>
 #include "GameExceptions.h"
+#include <fstream>
+#include "GameSave.h"
+
+
+
+
+
+
+
+
+
+
+
+std::string GameField::saveToFile(const std::string& filename, bool toSave, const ManagerShips& manager) const {
+    std::stringstream ss;
+
+    // Сохраняем размеры поля
+    ss << width << " " << height << "\n";
+
+    // Сохраняем состояние каждой клетки
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            const Cell& cell = grid[y][x];
+            if (cell.getState() == CellState::ShipPart && cell.getShipPart()) {
+                bool found = false;
+                for (size_t shipIndex = 0; shipIndex < manager.getShips().size() && !found; ++shipIndex) {
+                    const auto& ship = manager.getShips()[shipIndex];
+                    for (int segmentIndex = 0; segmentIndex < ship->getLength(); ++segmentIndex) {
+                        if (&ship->getSegment(segmentIndex) == cell.getShipPart()) {
+                            ss << "S " << shipIndex << " " << segmentIndex << " ";
+                            found = true;
+                            break; // Выход из внутреннего цикла
+                        }
+                    }
+                }
+            } else if (cell.getState() == CellState::Empty) {
+                ss << "E ";
+            } else {
+                ss << "U ";
+            }
+        }
+        ss << "\n";
+    }
+
+    if (!toSave) {
+        return ss.str();
+    }
+
+    std::ofstream outFile(filename);
+    if (!outFile.is_open()) {
+        throw std::runtime_error("Failed to open file for saving.");
+    }
+
+    outFile << ss.str();
+    outFile.close();
+    return ss.str();
+}
+
+
+void GameField::loadFromFile(const std::string& filename, ManagerShips& manager) {
+    std::ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        throw std::runtime_error("The save file could not be opened.");
+    }
+
+    // Загружаем размеры поля
+    inFile >> width >> height;
+    grid.resize(height, std::vector<Cell>(width));
+
+    // Загружаем состояние каждой клетки
+    std::string cellState;
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            inFile >> cellState;
+            if (cellState == "S") {
+                int shipIndex, segmentIndex;
+                inFile >> shipIndex >> segmentIndex;
+
+                // Проверяем корректность индексов
+                if (shipIndex < 0 || shipIndex >= static_cast<int>(manager.getShips().size())) {
+                    throw std::runtime_error("Invalid ship index in save file.");
+                }
+                auto& ship = manager.getShips()[shipIndex];
+                if (segmentIndex < 0 || segmentIndex >= ship->getLength()) {
+                    throw std::runtime_error("Invalid segment index in save file.");
+                }
+
+                // Устанавливаем связь с сегментом корабля
+                grid[y][x].setShipPart(&ship->getSegment(segmentIndex));
+                grid[y][x].setState(CellState::ShipPart);
+            } else if (cellState == "E") {
+                grid[y][x].setState(CellState::Empty);
+            } else {
+                grid[y][x].setState(CellState::Unknown);
+            }
+        }
+    }
+
+    inFile.close();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -52,7 +167,7 @@ void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship
             }
             break;
         case 20:
-            if (ability == nullptr and currentShip == nullptr and player.getAbilityManager().hasAbilities()) {
+            if (ability == nullptr  and currentShip == nullptr and player.getAbilityManager().hasAbilities()) {
                 // Получаем способность из AbilityManager
                 ability = player.getAbilityManager().getRandomAbility();
                 if (ability) {
@@ -61,13 +176,24 @@ void GameField::executeAction(bool& actionConfirmed, int selectedGameField, Ship
                 } else {
                     throw AbilityAcquisitionException();
                 }
-            } else {
+            } else if (currentShip == nullptr){
                 throw AbilityNotAvailableException();
+            }
+            break;
+        case 30:
+            if (currentShip == nullptr) {
+                gameSave.save(player, opponent);
+            }
+            break;
+        case 40:
+            if (currentShip == nullptr) {
+                gameSave.load(player, opponent);
             }
             break;
         case 1:
             if (ability){
                 ability->use(opponent.getManagerShips(), *this, cursorX, cursorY);
+                Sleep(1000);
                 actionConfirmed = true;
                 ability = nullptr;
             }
@@ -147,6 +273,7 @@ bool GameField::placeShip(Ship& ship, int x, int y) {
         }
     }
 
+    ship.setStartPosition(x,y);
     return true;  // Корабль успешно размещен
 }
 

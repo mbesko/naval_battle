@@ -11,7 +11,7 @@
 
 FieldSettingsState::FieldSettingsState() : activeFieldSettings(FieldSize), items{"Размер поля     ", "Однопалубный    ", "Двухпалубный    ", "Трехпалубный    ", "Четырехпалубный ", "Выход", "Начать игру"}, fieldSettingsSize(7) {
     fieldSettingsSize = sizeof(items) / sizeof(items[0]);
-    values[FieldSize] = 10;
+    values[FieldSize] = 7;
     values[OneDeck] = 0;
     values[TwoDeck] = 0;
     values[ThreeDeck] = 0;

@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <iostream>
 #include <windows.h>
-
+#include "GameFieldDisplay.h"
 
 
 Player::Player(const std::string& name, int fieldSize, int oneDeck, int twoDeck, int threeDeck, int fourDeck) : name(name), field(fieldSize), managerShips(oneDeck, twoDeck, threeDeck, fourDeck){}
@@ -35,6 +35,7 @@ void Player::placeShips() {
         while (isPlacingShip) {
             Console::clear();
             field.display(ship.get());  // Отображаем поле и область размещения корабля
+            GameFieldDisplay::keyboardLayout();
             field.handleInput(isPlacingShip, ship.get(), *this, *this);  // Обработка перемещения и размещения
 
             if (!isPlacingShip) {
@@ -83,11 +84,13 @@ bool Player::takeTurn(Player& opponent, Player& currentPlayer) {
         Console::clear();
         Console::GoToXY(0, 0);
         opponent.getField().display(nullptr);  // Отображаем поле противника
-        opponent.managerShips.displayAliveShipsBySize(0, fieldSize*2+5);
+        opponent.managerShips.displayAliveShipsBySize(3, fieldSize*2+5);
 
         currentPlayer.getField().display(nullptr,field.getSize() * 6+5, false, true);
         currentPlayer.managerShips.displayAliveShipsBySize(fieldSize * 6+10, fieldSize*2+5);
+        GameFieldDisplay::keyboardLayout();
         opponent.getField().handleInput(shotMade, nullptr, *this, opponent);  // Обрабатываем выбор цели и выстрел
+        Console::clear();
 
         if (countShip - opponent.managerShips.countAliveShips() != 0){
             currentPlayer.abilityManager.addRandomAbility();
@@ -95,13 +98,16 @@ bool Player::takeTurn(Player& opponent, Player& currentPlayer) {
 
       if (shotMade) {
           opponent.getField().display(nullptr);  // Отображаем поле противника
-          opponent.managerShips.displayAliveShipsBySize(0, fieldSize*2+5);
+          opponent.managerShips.displayAliveShipsBySize(3, fieldSize*2+5);
 
           currentPlayer.getField().display(nullptr,field.getSize() * 6+5, false, true);
           currentPlayer.managerShips.displayAliveShipsBySize(fieldSize * 6+10, fieldSize*2+5);
+
           Sleep(1000);
 
           }
+
+
 
 
     }

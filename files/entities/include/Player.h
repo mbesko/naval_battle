@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 
+
 // Класс игрока, управляющий его полем и кораблями
 class Player {
 private:

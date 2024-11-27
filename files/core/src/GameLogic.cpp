@@ -11,17 +11,26 @@ GameLogic::GameLogic(int fieldSize, int oneDeck, int twoDeck, int threeDeck, int
         : player1("Игрок 1",fieldSize, oneDeck, twoDeck, threeDeck,  fourDeck), player2("Игрок 2",fieldSize,  oneDeck, twoDeck, threeDeck,  fourDeck), isPlayer1Turn(true) {}
 
 // Основной цикл игры
-void GameLogic::startGame() {
+void GameLogic::startGame(bool save) {
     // Этап размещения кораблей перед началом игры
+    if (save){
+        GameSave save;
+        save.load(player1,player2);
+    }
     bool isGame = true;
     while (true) {
+        if (!isGame) break;
+        if(!save){
         player1.placeShips();  // Игрок 1 размещает корабли
-        Sleep(1000);
+        Sleep(1000);}
         while (isGame){
+            if(!save){
             player2.placeShipsRandomly();  // Игрок 2 размещает корабли
-            Sleep(1000);
+            Sleep(1000);}
         // Основной игровой цикл
+        save = false;
         while (!isGameOver()) {
+
             Player &currentPlayer = player1;  // Получаем текущего игрока
             Player &opponent = player2;  // Получаем соперника
 
@@ -32,11 +41,13 @@ void GameLogic::startGame() {
                 break;  // Игра окончена, все корабли соперника потоплены
             }
             opponent.randomAttack(currentPlayer);
+
             if (currentPlayer.getField().areAllShipsSunk()) {
                 isGame = false;
                 pressEnter(opponent.getName(), " победил!", 70, 20);
                 break;  // Игра окончена, все корабли соперника потоплены
             }
+
         }
         if (isGame) {
             std::string choice;
@@ -48,7 +59,8 @@ void GameLogic::startGame() {
             }
             player2.cleanField();
         }
-    }}
+    }
+    }
 }
 void GameLogic::pressEnter(std::string player, std::string text, int x, int y) {
     Console::clear();
@@ -111,3 +123,4 @@ Player& GameLogic::getOpponent() {
 //void GameLogic::handleInput() {
 //    // Можно оставить пустым или добавить логику позже
 //}
+
