@@ -173,7 +173,7 @@ void ManagerShips::displayAliveShipsBySize(int x, int y) const {
     }
 
     // Выводим верхнюю рамку
-    Console::GoToXY(x, y);
+    Console::GoToXY(x, --y);
     std::cout << "╔════════════════════╗";
     Console::GoToXY(x, ++y);
     std::cout << "║   Живые корабли    ║";

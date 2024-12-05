@@ -27,10 +27,10 @@ int GameFieldInput::handleGameFieldInput(int &cursorX, int &cursorY, int height,
         case 't':  // Изменение ориентации корабля во время размещения
             return 10;
         case 'J':
-        case 'j':  // Изменение ориентации корабля во время размещения
+        case 'j':  // Загрузка сохранения
             return 40;
         case 'N':
-        case 'n':  // Изменение ориентации корабля во время размещения
+        case 'n':  // Сохранить игру
             return 30;
         case ENTER:  // Подтверждение действия (размещение корабля или выстрел)
             return 1;

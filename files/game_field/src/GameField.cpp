@@ -13,14 +13,6 @@
 
 
 
-
-
-
-
-
-
-
-
 std::string GameField::saveToFile(const std::string& filename, bool toSave, const ManagerShips& manager) const {
     std::stringstream ss;
 
@@ -77,6 +69,9 @@ void GameField::loadFromFile(const std::string& filename, ManagerShips& manager)
     inFile >> width >> height;
     grid.resize(height, std::vector<Cell>(width));
 
+    if (width != height){
+        throw std::runtime_error("Invalid size field.");
+    }
     // Загружаем состояние каждой клетки
     std::string cellState;
     for (int y = 0; y < height; ++y) {
@@ -108,22 +103,6 @@ void GameField::loadFromFile(const std::string& filename, ManagerShips& manager)
 
     inFile.close();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Реализация чисто виртуального метода display

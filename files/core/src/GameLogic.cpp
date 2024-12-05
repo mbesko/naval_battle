@@ -14,7 +14,7 @@ GameLogic::GameLogic(int fieldSize, int oneDeck, int twoDeck, int threeDeck, int
 void GameLogic::startGame(bool save) {
     // Этап размещения кораблей перед началом игры
     if (save){
-        GameSave save;
+        GameSave save("saves");
         save.load(player1,player2);
     }
     bool isGame = true;
