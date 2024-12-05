@@ -20,9 +20,18 @@ int GameFieldInput::handleGameFieldInput(int &cursorX, int &cursorY, int height,
         case RIGHT:  // Перемещение курсора вправо
             if (cursorX < width - 1) cursorX++;
             return 2;
+        case 'R':  // Выбор случайной способности и её использование
+        case 'r':
+            return 20;
         case 'T':
         case 't':  // Изменение ориентации корабля во время размещения
             return 10;
+        case 'J':
+        case 'j':  // Загрузка сохранения
+            return 40;
+        case 'N':
+        case 'n':  // Сохранить игру
+            return 30;
         case ENTER:  // Подтверждение действия (размещение корабля или выстрел)
             return 1;
         default:

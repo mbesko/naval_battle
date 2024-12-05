@@ -62,3 +62,10 @@ bool Ship::isSunk() const {
     }
     return true;
 }
+
+int Ship::getStartX() const { return startX; }
+int Ship::getStartY() const { return startY; }
+void Ship::setStartPosition(int x, int y) {
+    startX = x;
+    startY = y;
+}

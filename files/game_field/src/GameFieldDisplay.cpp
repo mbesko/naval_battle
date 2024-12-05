@@ -93,6 +93,22 @@ void GameFieldDisplay::printHorizontalDivider(int size) const{
     std::cout << "+\n";
 }
 
+void GameFieldDisplay::keyboardLayout(){
+    std::cout << R"(
+
+   ╔═══════════╗                            ╔═══════╗                              ╔═══════╗
+   ║     ↑     ║                            ║   R   ║ - Использовать способность   ║   N   ║ - Сохранить игру
+   ╠═══╦═══╦═══╣                            ╚═══════╝                              ╚═══════╝
+   ║ ← ║ ↓ ║ → ║ - Перемещение курсора      ╔═══════╗                              ╔═══════╗
+   ╚═══╩═══╩═══╝                            ║   T   ║ - Изменение ориентации       ║   J   ║ - Загрузить игру
+   ╔═══════╗                                ╚═══════╝                              ╚═══════╝
+   ║ ENTER ║ - Выполнить действие (выстрел, размещение)
+   ╚═══════╝
+)";
+
+}
+
+
 // Анимация выстрела по клетке
 void GameFieldDisplay::animateShot(int fromX, int fromY, int toX, int toY) {
     int dx = (toX > fromX) ? 1 : -1;  // Направление движения по X

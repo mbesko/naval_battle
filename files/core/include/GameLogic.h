@@ -13,8 +13,9 @@ private:
     bool isPlayer1Turn;  // Чей сейчас ход
 
 public:
-    GameLogic(Player&& p1, Player&& p2);  // Конструктор с передачей игроков
-    void startGame();  // Начало игры и основной игровой цикл
+    //GameLogic(Player&& p1, Player&& p2);  // Конструктор с передачей игроков
+    GameLogic(int fieldSize, int oneDeck, int twoDeck, int threeDeck, int fourDeck);
+    void startGame(bool save = false);  // Начало игры и основной игровой цикл
     void pressEnter(std::string player, std::string text, int x, int y);
     void switchTurn();  // Смена хода
     bool isGameOver();  // Проверка, окончена ли игра

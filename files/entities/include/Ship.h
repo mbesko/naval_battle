@@ -15,6 +15,8 @@ private:
     int length;                          // Длина корабля
     std::vector<ShipPoint> segments;     // Сегменты корабля
     Orientation orientation;             // Ориентация корабля
+    int startX;                          // Начальная координата X
+    int startY;                          // Начальная координата Y
 
 public:
     // Конструктор принимает длину и ориентацию корабля
@@ -40,6 +42,11 @@ public:
 
     // Проверка, уничтожен ли корабль
     bool isSunk() const;
+
+
+    int getStartX() const;
+    int getStartY() const;
+    void setStartPosition(int x, int y);
 };
 
 #endif // SHIP_H

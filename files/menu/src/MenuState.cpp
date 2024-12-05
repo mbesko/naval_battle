@@ -5,6 +5,8 @@
 #include <windows.h>
 #include "KeyCodes.h"
 #include <iostream>
+#include "GameLogic.h"
+
 
 MenuState::MenuState() : activeMenu(NewGame), items{"Новая игра", "Загрузить", "Настройки", "Выход"}, menuSize(4) {}
 
@@ -89,6 +91,11 @@ void MenuState::executeAction(int selectedMenu) {
             Game::getInstance().setState(new FieldSettingsState());
             break;
         case LoadGame:
+        {
+            std::unique_ptr <GameLogic> gameLogic = std::make_unique<GameLogic>(10, 1, 1, 1, 1);
+            gameLogic->startGame(true);
+            break;
+        }
         case Settings:
             Console::clear();
             Console::GoToXY(50, 12);

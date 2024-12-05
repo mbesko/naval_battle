@@ -9,12 +9,17 @@
 #include "GameFieldDisplay.h"
 #include "GameField.h"
 #include "GameFieldInput.h"
+#include "Ability.h"
 #include <iomanip>
+#include "GameSave.h"
 
+
+class Player;
 
 class GameField : public GameState {
 private:
     int size;
+    std::unique_ptr<Ability> ability = nullptr;
 
     int width, height;  // Размеры поля
     std::vector<std::vector<Cell>> grid;  // Игровое поле
@@ -22,9 +27,13 @@ private:
 
     GameFieldDisplay gameFieldDisplay;
     GameFieldInput input;
+    GameSave gameSave;
 
 
 public:
+
+    std::string saveToFile(const std::string& filename, bool toSave, const ManagerShips& manager) const;
+    void loadFromFile(const std::string& filename, ManagerShips& manager);
 
     // Конструкторы копирования и перемещения
     GameField(const GameField& other);  // Конструктор копирования
@@ -38,16 +47,18 @@ public:
     void setZeroCursor();
     GameField(int size); // Конструктор игрового поля
     void display(Ship* currentShip = nullptr, int go = 0, bool enemy = true, bool open = false); //override; // Отображение игрового поля
-    void handleInput(bool& actionConfirmed, Ship* currentShip); //override;  // Обработка перемещения и действий (размещение/выстрел)
+    void handleInput(bool& actionConfirmed, Ship* currentShip, Player& player, Player& opponent); //override;  // Обработка перемещения и действий (размещение/выстрел)
 
-    void executeAction(bool& actionConfirmed, int selectedGameField, Ship* currentShip);
+    void executeAction(bool& actionConfirmed, int selectedGameField, Ship* currentShip, Player& player, Player& opponent);
 
 
 
     bool placeShip(Ship& ship, int x, int y);  // Размещение корабля на поле
+    Cell& getCell(int x, int y);
+
 
     void setStateUnknown();
-    void attack(int x, int y);  // Выстрел по клетке
+    void attack(int x, int y, bool enemy = false);  // Выстрел по клетке
     bool areAllShipsSunk() const;  // Проверка, все ли корабли уничтожены
 
 //    void display();

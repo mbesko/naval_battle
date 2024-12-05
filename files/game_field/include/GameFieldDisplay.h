@@ -16,6 +16,10 @@ public:
 
     // Анимация для выстрела
     void animateShot(int fromX, int fromY, int toX, int toY);
+    static void keyboardLayout();
+
+
+
 
     // Анимация для попадания
     void animateHit(int x, int y);

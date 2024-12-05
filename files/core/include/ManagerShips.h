@@ -20,7 +20,12 @@ public:
     ManagerShips(const ManagerShips&) = delete;
     ManagerShips& operator=(const ManagerShips&) = delete;
 
-    // Разрешаем перемещение
+
+    std::string saveToFile(const std::string& filename, bool toSave) const;
+    void loadFromFile(const std::string& filename, GameField& field);
+
+
+        // Разрешаем перемещение
     ManagerShips(ManagerShips&&) = default;
     ManagerShips& operator=(ManagerShips&&) = default;
 
@@ -41,8 +46,9 @@ public:
 
     // Метод для получения всех кораблей
     std::vector<std::unique_ptr<Ship>>& getShips();
-
+    const std::vector<std::unique_ptr<Ship>>& getShips() const;
     void displayAliveShipsBySize(int x, int y) const;
+    int countAliveShips() const;
 };
 
 #endif // MANAGERSHIPS_H

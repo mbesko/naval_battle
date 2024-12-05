@@ -25,7 +25,7 @@ public:
 
     // Установить состояние клетки
     void setState(CellState newState);
-
+    void cleanShipPart();
 
     // Установить сегмент корабля в клетке
     void setShipPart(ShipPoint* segment);

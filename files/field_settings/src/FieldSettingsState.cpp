@@ -11,7 +11,7 @@
 
 FieldSettingsState::FieldSettingsState() : activeFieldSettings(FieldSize), items{"Размер поля     ", "Однопалубный    ", "Двухпалубный    ", "Трехпалубный    ", "Четырехпалубный ", "Выход", "Начать игру"}, fieldSettingsSize(7) {
     fieldSettingsSize = sizeof(items) / sizeof(items[0]);
-    values[FieldSize] = 10;
+    values[FieldSize] = 7;
     values[OneDeck] = 0;
     values[TwoDeck] = 0;
     values[ThreeDeck] = 0;
@@ -151,10 +151,11 @@ void FieldSettingsState::handleInput() {
         Game::getInstance().setState(new MenuState());
     } else if (selectedMenuFieldSettings == 10 && activeFieldSettings == StartGame && values[OneDeck] + values[TwoDeck] + values[ThreeDeck] + values[FourDeck] > 0) {
         PlaySound(TEXT("sounds/enter.wav"), NULL, SND_FILENAME | SND_ASYNC);
-        Player player1("Игрок 1", values[FieldSize], values[OneDeck], values[TwoDeck], values[ThreeDeck], values[FourDeck]);
-        Player player2("Игрок 2", values[FieldSize], values[OneDeck], values[TwoDeck], values[ThreeDeck], values[FourDeck]);
+        //Player player1("Игрок 1", values[FieldSize], values[OneDeck], values[TwoDeck], values[ThreeDeck], values[FourDeck]);
+       // Player player2("Игрок 2", values[FieldSize], values[OneDeck], values[TwoDeck], values[ThreeDeck], values[FourDeck]);
         Sleep(1000);
-        std::unique_ptr<GameLogic> gameLogic = std::make_unique<GameLogic>(std::move(player1), std::move(player2));
+        //std::unique_ptr<GameLogic> gameLogic = std::make_unique<GameLogic>(std::move(player1), std::move(player2));
+        std::unique_ptr<GameLogic> gameLogic = std::make_unique<GameLogic>(values[FieldSize], values[OneDeck], values[TwoDeck], values[ThreeDeck], values[FourDeck]);
         gameLogic->startGame();
     }
 }

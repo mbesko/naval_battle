@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.14)
 project(NavalBattle)
 
 # Установка стандарта C++
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Установка компилятора C++ и компилятора ресурсов для MinGW
@@ -13,7 +13,7 @@ set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
 set(CMAKE_RC_COMPILER x86_64-w64-mingw32-windres)
 
 # Добавление флагов компиляции
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -static")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -static")
 
 # Установка директорий
 set(FILES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/files")
@@ -27,6 +27,7 @@ set(SOURCES
         ${FILES_DIR}/core/src/Game.cpp
         ${FILES_DIR}/core/src/GameLogic.cpp
         ${FILES_DIR}/core/src/ManagerShips.cpp
+        ${FILES_DIR}/core/src/GameSave.cpp
 
         # Файлы для меню
         ${FILES_DIR}/menu/src/MenuState.cpp
@@ -42,6 +43,14 @@ set(SOURCES
         ${FILES_DIR}/game_field/src/GameField.cpp
         ${FILES_DIR}/game_field/src/GameFieldDisplay.cpp
         ${FILES_DIR}/game_field/src/GameFieldInput.cpp
+
+        # Файлы для способностей
+        ${FILES_DIR}/ability/src/DoubleDamage.cpp
+        ${FILES_DIR}/ability/src/Bombardment.cpp
+        ${FILES_DIR}/ability/src/Scanner.cpp
+        ${FILES_DIR}/ability/src/AbilityManager.cpp
+
+
 
         # Файлы для сущностей
         ${FILES_DIR}/entities/src/Ship.cpp
@@ -60,6 +69,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${FILES_DIR}/core/include
         ${FILES_DIR}/menu/include
+        ${FILES_DIR}/game_field/include
+        ${FILES_DIR}/ability/include
         ${FILES_DIR}/field_settings/include
         ${FILES_DIR}/entities/include
 )
